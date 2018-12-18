@@ -94,6 +94,20 @@ RSpec.describe ActiveJson::Filter do
       let(:attributes) { 'size.waist <= 5' }
       it { expect(result).to eq false }
     end
+
+    context 'deeply nested' do
+      let(:hash) do
+        { clothing: { pant: { size: { waist: 10, style: 'narrow' } } } }
+      end
+      let(:attributes) { 'clothing.pant.size.waist == 10' }
+      it { expect(result).to eq true }
+    end
+  end
+
+  context 'comparing attributes' do
+    let(:hash) { { size: 5, length: 4 } }
+    let(:attributes) { 'size > length' }
+    xit { expect(result).to eq true }
   end
 
 end
