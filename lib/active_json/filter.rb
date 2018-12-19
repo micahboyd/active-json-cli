@@ -1,35 +1,67 @@
 module ActiveJson
   module Filter
+    extend self
 
-    VALID_OPERATORS = %i[== != <= >= < >]
+    VALID_OPERATORS = %w[== != <= >= < >].freeze
 
-    def self.new(args)
-      filter = args.split.each.with_object([:[]]) do |a, obj|
-        obj.append(*parse_value(a))
-      end
-
-      paired_filter = filter.each_slice(2).to_a
-      filter_lambda(paired_filter)
+    def new(args)
+      attributes = args.split.map(&parse_value)
+      filter_lambda(attributes)
     end
 
-    def self.parse_value(value)
-      if value['"'] || value["'"]
-        value.delete('"').delete("'")
-      elsif value.to_i.to_s == value
-        value.to_i
-      elsif value['.']
-        value.gsub('.', ' [] ').split.map(&:to_sym)
-      else
-        value.to_sym
-      end
-    end
+    private
 
-    def self.filter_lambda(filter)
+    def filter_lambda(filter)
       -> (data) do
-        filter.reduce(data) { |d, pair| d.send(*pair) }
+        filter.map! do |attribute|
+          attribute.is_a?(Array) ? reduce_data(attribute, data) : attribute
+        end
+        filter[0].send(*filter[1..-1])
       end
+    end
+
+    # --------- HELPERS ---------
+
+    def parse_value
+      -> (value) do
+        case value
+        when string   then value.delete('"').delete("'")
+        when integer  then value.to_i
+        when operator then value.to_sym
+        when chain    then parse_chain(value)
+        else [[:[], value.to_sym]]
+        end
+      end
+    end
+
+    def string
+      -> (value) { value['"'] || value["'"] }
+    end
+
+    def integer
+      -> (value) { value.to_i.to_s == value }
+    end
+
+    def operator
+      -> (value) { VALID_OPERATORS.include?(value) }
+    end
+
+    def chain
+      -> (value) { value['.'] }
+    end
+
+    def parse_chain(value)
+      value.gsub('.', ' [] ')
+           .split
+           .prepend(:[])
+           .map(&:to_sym)
+           .each_slice(2)
+           .to_a
+    end
+
+    def reduce_data(pairs, data)
+      pairs.reduce(data) { |d, pair| d.send(*pair) }
     end
 
   end
-
 end

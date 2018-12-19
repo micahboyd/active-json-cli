@@ -105,9 +105,24 @@ RSpec.describe ActiveJson::Filter do
   end
 
   context 'comparing attributes' do
-    let(:hash) { { size: 5, length: 4 } }
-    let(:attributes) { 'size > length' }
-    xit { expect(result).to eq true }
+
+    context 'top level' do
+      let(:hash) { { width: 5, length: 4 } }
+      let(:attributes) { 'width > length' }
+      it { expect(result).to eq true }
+    end
+
+    context 'one nested' do
+      let(:hash) { { height: { hat: 5, pant: 2 }, brim: 4 } }
+      let(:attributes) { 'height.pant == brim' }
+      it { expect(result).to eq false }
+    end
+
+    context 'both nested' do
+      let(:hash) { { width: { cm: 5, in: 2 }, length: { cm: 4, in: 1 } } }
+      let(:attributes) { 'width.cm < length.cm' }
+      it { expect(result).to eq false }
+    end
   end
 
 end
