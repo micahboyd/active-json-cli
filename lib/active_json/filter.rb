@@ -25,7 +25,7 @@ module ActiveJson
     def parse_value
       -> (value) do
         case value
-        when string   then value.delete('"').delete("'")
+        when string   then value[1..-2]
         when integer  then value.to_i
         when operator then value.to_sym
         when chain    then parse_chain(value)
@@ -35,7 +35,7 @@ module ActiveJson
     end
 
     def string
-      -> (value) { value['"'] || value["'"] }
+      -> (value) { %w[' "].any? { |q| value.start_with?(q) && value.end_with?(q) } }
     end
 
     def integer

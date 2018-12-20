@@ -1,13 +1,11 @@
 require 'spec_helper'
-require 'ostruct'
 require 'json'
 
 RSpec.describe ActiveJson::Filter do
 
   subject(:filter) { ActiveJson::Filter.new(attributes) }
 
-  let(:data)       { JSON.parse(hash.to_json, object_class: OpenStruct) }
-  let(:hash)       { { key: 'value' } }
+  let(:data)       { { key: 'value' } }
   let(:attributes) { "key == 'value'" }
   let(:result)     { filter.call(data) }
 
@@ -15,7 +13,7 @@ RSpec.describe ActiveJson::Filter do
   it { expect(result).to eq true }
 
   context 'comparing String values' do
-    let(:hash) { { user: 'coach' } }
+    let(:data) { { user: 'coach' } }
 
     context '==' do
       let(:attributes) { 'user == "coach"' }
@@ -29,7 +27,7 @@ RSpec.describe ActiveJson::Filter do
   end
 
   context 'comparing Integer values' do
-    let(:hash) { { size: 5 } }
+    let(:data) { { size: 5 } }
 
     context '==' do
       let(:attributes) { 'size == 5' }
@@ -63,7 +61,7 @@ RSpec.describe ActiveJson::Filter do
   end
 
   context 'comparing nested values' do
-    let(:hash) { { size: { waist: 10, style: 'narrow' } } }
+    let(:data) { { size: { waist: 10, style: 'narrow' } } }
 
     context '==' do
       let(:attributes) { 'size.style == "narrow"' }
@@ -96,7 +94,7 @@ RSpec.describe ActiveJson::Filter do
     end
 
     context 'deeply nested' do
-      let(:hash) do
+      let(:data) do
         { clothing: { pant: { size: { waist: 10, style: 'narrow' } } } }
       end
       let(:attributes) { 'clothing.pant.size.waist == 10' }
@@ -107,19 +105,19 @@ RSpec.describe ActiveJson::Filter do
   context 'comparing attributes' do
 
     context 'top level' do
-      let(:hash) { { width: 5, length: 4 } }
+      let(:data) { { width: 5, length: 4 } }
       let(:attributes) { 'width > length' }
       it { expect(result).to eq true }
     end
 
     context 'one nested' do
-      let(:hash) { { height: { hat: 5, pant: 2 }, brim: 4 } }
+      let(:data) { { height: { hat: 5, pant: 2 }, brim: 4 } }
       let(:attributes) { 'height.pant == brim' }
       it { expect(result).to eq false }
     end
 
     context 'both nested' do
-      let(:hash) { { width: { cm: 5, in: 2 }, length: { cm: 4, in: 1 } } }
+      let(:data) { { width: { cm: 5, in: 2 }, length: { cm: 4, in: 1 } } }
       let(:attributes) { 'width.cm < length.cm' }
       it { expect(result).to eq false }
     end
