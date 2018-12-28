@@ -2,18 +2,24 @@ require 'spec_helper'
 
 RSpec.describe ActiveJson::Query do
 
-  subject(:query_result) { ActiveJson::Query.execute(data, where: filters) }
+  subject(:query) { ActiveJson::Query }
+
+  let(:select_result) { query.select(data, where: filters) }
+  let(:reject_result) { query.reject(data, where: filters) }
+
+  Filter = Struct.new(:attrs) { def call(d); d.send(*attrs); end }
 
   let(:data)    { (1..10) }
   let(:filters) { [filter1, filter2] }
-  Filter = Struct.new(:method) { def call(d); d.send(*method); end }
+  let(:filter1) { Filter.new([:<, 9]) }
+  let(:filter2) { Filter.new([:>, 5]) }
 
-  context 'context' do
-    let(:filter1) { Filter.new([:<, 9]) }
-    let(:filter2) { Filter.new([:>, 5]) }
-    it 'does something' do
-      expect(query_result).to eq [6, 7, 8]
-    end
+  context 'selecting data' do
+    it { expect(select_result).to eq [6, 7, 8] }
+  end
+
+  context 'rejecting data' do
+    it { expect(reject_result).to eq [1, 2, 3, 4, 5, 9, 10] }
   end
 
 end

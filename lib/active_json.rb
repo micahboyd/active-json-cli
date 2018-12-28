@@ -1,12 +1,31 @@
 require 'lib'
+require 'json'
 
 module ActiveJson
-  class Error < StandardError; end
+  class << self
 
-  def self.call(json, filters)
-    data = JSON.parse(json, symbolize_names: true)
-    filters = filters.each { |attributes| Filter.new(attributes)}
-    Query.execute(data, where: filters)
+    def select(json, query:)
+      data = parse_json(json)
+      filters = build_filters(query)
+      Query.select(data, where: filters)
+    end
+
+    def reject(json, query:)
+      data = parse_json(json)
+      filters = build_filters(query)
+      Query.reject(data, where: filters)
+    end
+
+    private
+
+    def build_filters(query)
+      query.split(',').map { |attrs| Filter.new(attrs.strip) }
+    end
+
+    def parse_json(json)
+      JSON.parse(json, symbolize_names: true)
+    end
   end
+
 
 end

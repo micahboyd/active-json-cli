@@ -26,37 +26,39 @@ RSpec.describe ActiveJson::Filter do
     end
   end
 
-  context 'comparing Integer values' do
-    let(:data) { { size: 5 } }
+  [['Integer', 5],['Float', 5.5]].each do |type, value|
+    context "comparing #{type} values" do
+      let(:data) { { size: value } }
 
-    context '==' do
-      let(:attributes) { 'size == 5' }
-      it { expect(result).to eq true }
-    end
+      context '==' do
+        let(:attributes) { "size == #{value}" }
+        it { expect(result).to eq true }
+      end
 
-    context '!=' do
-      let(:attributes) { 'size != 5' }
-      it { expect(result).to eq false }
-    end
+      context '!=' do
+        let(:attributes) { "size != #{value}" }
+        it { expect(result).to eq false }
+      end
 
-    context '>' do
-      let(:attributes) { 'size > 5' }
-      it { expect(result).to eq false }
-    end
+      context '>' do
+        let(:attributes) { "size > #{value}" }
+        it { expect(result).to eq false }
+      end
 
-    context '>=' do
-      let(:attributes) { 'size >= 5' }
-      it { expect(result).to eq true }
-    end
+      context '>=' do
+        let(:attributes) { "size >= #{value}" }
+        it { expect(result).to eq true }
+      end
 
-    context '<' do
-      let(:attributes) { 'size < 5' }
-      it { expect(result).to eq false }
-    end
+      context '<' do
+        let(:attributes) { "size < #{value}" }
+        it { expect(result).to eq false }
+      end
 
-    context '<=' do
-      let(:attributes) { 'size <= 5' }
-      it { expect(result).to eq true }
+      context '<=' do
+        let(:attributes) { "size <= #{value}" }
+        it { expect(result).to eq true }
+      end
     end
   end
 
