@@ -12,7 +12,7 @@ RSpec.describe ActiveJson::Filter do
   it { expect(filter).to be_instance_of Proc }
   it { expect(result).to eq true }
 
-  context 'comparing String values' do
+  describe 'comparing String values' do
     let(:data) { { user: 'coach' } }
 
     context '==' do
@@ -27,7 +27,7 @@ RSpec.describe ActiveJson::Filter do
   end
 
   [['Integer', 5],['Float', 5.5]].each do |type, value|
-    context "comparing #{type} values" do
+    describe "comparing #{type} values" do
       let(:data) { { size: value } }
 
       context '==' do
@@ -62,7 +62,7 @@ RSpec.describe ActiveJson::Filter do
     end
   end
 
-  context 'comparing nested values' do
+  describe 'comparing nested values' do
     let(:data) { { size: { waist: 10, style: 'narrow' } } }
 
     context '==' do
@@ -104,7 +104,7 @@ RSpec.describe ActiveJson::Filter do
     end
   end
 
-  context 'comparing attributes' do
+  describe 'comparing attributes' do
 
     context 'top level' do
       let(:data) { { width: 5, length: 4 } }
@@ -122,6 +122,33 @@ RSpec.describe ActiveJson::Filter do
       let(:data) { { width: { cm: 5, in: 2 }, length: { cm: 4, in: 1 } } }
       let(:attributes) { 'width.cm < length.cm' }
       it { expect(result).to eq false }
+    end
+  end
+
+  describe 'comparing missing' do
+
+    context 'attribute' do
+      let(:data) { { length: 4 } }
+      let(:attributes) { 'width > 5' }
+      it { expect(result).to eq nil }
+    end
+
+    context 'value' do
+      let(:data) { { width: 5, length: 4 } }
+      let(:attributes) { 'width > height' }
+      it { expect(result).to eq nil }
+    end
+
+    context 'nested attribute' do
+      let(:data) { { height: { hat: 5, pant: 2 }, brim: 4 } }
+      let(:attributes) { 'height.sleeve == 2' }
+      it { expect(result).to eq nil }
+    end
+
+    context 'nested value' do
+      let(:data) { { width: { cm: 5, in: 2 }, length: { cm: 4, in: 1 } } }
+      let(:attributes) { 'width.cm < length.mm' }
+      it { expect(result).to eq nil }
     end
   end
 

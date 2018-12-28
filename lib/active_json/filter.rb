@@ -16,7 +16,7 @@ module ActiveJson
         extracted_data, *operation = filter.clone.map! do |attribute|
           attribute.is_a?(Array) ? reduce_data(attribute, data) : attribute
         end
-        extracted_data.send(*operation)
+        extracted_data&.send(*operation) unless operation.include?(nil)
       end
     end
 
