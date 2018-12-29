@@ -21,6 +21,33 @@ RSpec.describe ActiveJson do
     end
   end
 
+
+  context 'Selects JSON' do
+    let(:filters) { 'drink_name != "short espresso", drink_name != "long black", prices.small <= 3.5' }
+    it do
+      expect(active_json).to eq(
+        [
+          { drink_name: 'latte',
+            prices: { small: 3.5, medium: 4.0, large: 4.5 } },
+          { drink_name: 'flat white',
+            prices: { small: 3.5, medium: 4.0, large: 4.5 } }
+        ]
+      )
+    end
+  end
+
+  context 'Selects JSON' do
+    let(:filters) { 'drink_name == "short espresso"' }
+    it do
+      expect(active_json).to eq(
+        [
+          { drink_name: 'short espresso',
+            prices: { small: 3.0 } }
+        ]
+      )
+    end
+  end
+
   context 'Selects JSON' do
     let(:filters) { 'prices.small == 3.0' }
     it do

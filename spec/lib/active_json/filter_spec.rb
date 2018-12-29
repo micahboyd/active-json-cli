@@ -24,6 +24,20 @@ RSpec.describe ActiveJson::Filter do
       let(:attributes) { "user != 'coach'" }
       it { expect(result).to eq false }
     end
+
+    describe 'with spaces' do
+      let(:data) { { user: 'coach man' } }
+
+      context '==' do
+        let(:attributes) { 'user == "coach man"' }
+        it { expect(result).to eq true }
+      end
+
+      context '!=' do
+        let(:attributes) { "user != 'coach man'" }
+        it { expect(result).to eq false }
+      end
+    end
   end
 
   [['Integer', 5],['Float', 5.5]].each do |type, value|

@@ -5,8 +5,9 @@ module ActiveJson
     VALID_OPERATORS = %w[== != <= >= < >].freeze
 
     def new(args)
-      attributes = args.split.map(&parse_value)
-      filter_lambda(attributes)
+      attributes = process_args(args)
+      values = attributes.map(&parse_values)
+      filter_lambda(values)
     end
 
     private
@@ -22,7 +23,25 @@ module ActiveJson
 
     # --------- HELPERS ---------
 
-    def parse_value
+    def process_args(args)
+      string_quote = args['"'] || args["'"]
+      if string_quote
+        split_with_strings(args, string_quote)
+      else
+        args.split
+      end
+    end
+
+    def split_with_strings(args, quote)
+      string_start = args.index(quote)
+      string_end = args.rindex(quote)
+      string = args[string_start..string_end]
+      args.split.each.with_index(-1).with_object([]) do |(arg, i), obj|
+        string[arg] && string[obj[i]] ? obj[i] << " #{arg}" : obj << arg
+      end
+    end
+
+    def parse_values
       -> (value) do
         case value
         when string   then value[1..-2]
