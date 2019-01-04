@@ -1,6 +1,6 @@
 RSpec.describe ActiveJson do
 
-  subject(:active_json) { ActiveJson.select(json, query: filters) }
+  subject(:active_json) { ActiveJson.select(json, where: filters) }
 
   let(:json)    { IO.read(file) }
   let(:filters) { 'drink_name == "latte"' }

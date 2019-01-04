@@ -4,22 +4,22 @@ require 'json'
 module ActiveJson
   class << self
 
-    def select(json, query:)
+    def select(json, where:)
       data = parse_json(json)
-      filters = build_filters(query)
+      filters = build_filters(where)
       Query.select(data, where: filters)
     end
 
-    def reject(json, query:)
+    def reject(json, where:)
       data = parse_json(json)
-      filters = build_filters(query)
+      filters = build_filters(where)
       Query.reject(data, where: filters)
     end
 
     private
 
-    def build_filters(query)
-      query.split(',').map { |attrs| Filter.new(attrs.strip) }
+    def build_filters(where)
+      where.split(',').map { |attrs| Filter.new(attrs.strip) }
     end
 
     def parse_json(json)

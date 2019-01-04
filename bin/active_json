@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.join(__FILE__, '..', '..', 'lib')
+
+require 'active_json'
+require 'json'
+
+json_path, *args = ARGV
+
+json = IO.read(json_path)
+filters = args.join(' ')
+
+query_result = ActiveJson.select(json, where: filters)
+pretty_result = JSON.pretty_generate(query_result)
+
+STDOUT.write(pretty_result)
