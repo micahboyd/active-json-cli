@@ -52,6 +52,12 @@ RSpec.describe ActiveJson do
       end
     end
 
+    context 'selecting with no filters' do
+      let(:filters)   { nil }
+      let(:full_data) { JSON.parse(json, symbolize_names: true) }
+      it { expect(active_json).to eq full_data }
+    end
+
     context 'selecting with filter value with space' do
       let(:filters) { 'drink_name == "short espresso"' }
       it do
@@ -83,32 +89,12 @@ RSpec.describe ActiveJson do
 
     context 'top level attribute' do
       let(:pluck) { 'drink_name' }
-      it do
-        expect(active_json).to eq(
-          [
-            'short espresso',
-            'latte',
-            'flat white',
-            'long black',
-            'mocha'
-          ]
-        )
-      end
+      it { expect(active_json).to eq ['short espresso', 'latte', 'flat white', 'long black', 'mocha'] }
     end
 
     context 'nested attribute' do
       let(:pluck) { 'prices.small' }
-      it do
-        expect(active_json).to eq(
-          [
-            3.0,
-            3.5,
-            3.5,
-            3.25,
-            4.0
-          ]
-        )
-      end
+      it { expect(active_json).to eq [3.0, 3.5, 3.5, 3.25, 4.0] }
     end
 
     context 'missing attribute' do

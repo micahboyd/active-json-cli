@@ -22,4 +22,9 @@ RSpec.describe ActiveJson::Query do
     it { expect(reject_result).to eq [1, 2, 3, 4, 5, 9, 10] }
   end
 
+  context 'with no filters' do
+    let(:filters) { [] }
+    it { expect(select_result).to eq [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }
+  end
+
 end

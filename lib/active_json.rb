@@ -20,13 +20,17 @@ module ActiveJson
 
     def build_query(where, pluck)
       [
-        where.split(',').map { |attrs| Filter.new(attrs.strip) },
+        where&.split(',')&.map(&filter) || [],
         Pluck.new(pluck)
       ]
     end
 
     def parse_json(json)
       JSON.parse(json, symbolize_names: true)
+    end
+
+    def filter
+      -> (attrs) { Filter.new(attrs.strip) }
     end
   end
 
