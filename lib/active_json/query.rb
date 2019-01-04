@@ -4,12 +4,26 @@ module ActiveJson
   module Query
     extend self
 
-    %i[select reject].each do |query|
-      define_method query do |data, where:|
-        data.send(query) do |record|
-          where.all? { |filter| filter.call(record) }
-        end
+    def select(data, where:, pluck: nil)
+      result = data.select(&apply_filters(where))
+      pluck ? result.map(&pluck_attributes(pluck)).compact : result
+    end
+
+    def reject(data, where:, pluck: nil)
+      result = data.reject(&apply_filters(where))
+      pluck ? result.map(&pluck_attributes(pluck)).compact : result
+    end
+
+    private
+
+    def apply_filters(filters)
+      -> (record) do
+        filters.all? { |filter| filter.call(record) }
       end
+    end
+
+    def pluck_attributes(pluck)
+      -> (record) { pluck.call(record) }
     end
 
   end

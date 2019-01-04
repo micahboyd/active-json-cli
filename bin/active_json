@@ -10,7 +10,7 @@ json_path, *args = ARGV
 json = IO.read(json_path)
 filters = args.join(' ')
 
-query_result = ActiveJson.select(json, where: filters)
+query_result = ActiveJson.select(json, where: filters, pluck: '')
 pretty_result = JSON.pretty_generate(query_result)
 
 STDOUT.write(pretty_result)
