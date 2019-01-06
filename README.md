@@ -1,39 +1,58 @@
 # ActiveJson
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/active_json`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Format, query, and pluck data from JSON response files from the command line.
 
 ## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'active_json'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
 
     $ gem install active_json
 
 ## Usage
 
-TODO: Write usage instructions here
+###### example.json
 
-## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```json
+[
+  {
+    "drink_name": "latte",
+    "prices": { "small": 3.5, "medium": 4.0, "large": 4.5 },
+  }
+]
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+##### Command breakdown
+  $ `gem command` + `json_path` + `query command(s)`
 
-## Contributing
+#### Filtering:
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/active_json.
+Filter JSON content with the `where` keyword followed by an attribute comparison filter (`==` `!=` `<=` `>=` `<` `>`).
 
-## License
+For example running the following command...
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+    $ bin/active_json example.json where: 'drink_name == "latte"'
+
+...will return all entries whose `drink_name` keyword is "latte"
+
+If the JSON contains nested content you are able to query it as well:
+
+    $ bin/active_json example.json where: 'prices.small >= 3.5'
+
+You are able chain any number of filters:
+
+    $ bin/active_json example.json where: 'drink_name == "latte", prices.small <= 3.5'
+
+You can also compare attributes with one another:
+
+    $ bin/active_json example.json where: 'prices.small >= prices.large'
+
+Running the command without a `where` filter will return all JSON entries.
+
+#### Plucking:
+
+If you would rather return a particular attribute rather than the whole entry you can use the `pluck` keyword to only return a specified attribute. Running...
+
+    $ bin/active_json example.json where: 'drink_name == "latte"' pluck: prices.small
+
+...will return the `prices.small` attribute of all the entries whose `drink_name` keyword is "latte"
+
+Likewise running the `pluck` command without a `where` filter will return the specified attributes of all JSON entries.
