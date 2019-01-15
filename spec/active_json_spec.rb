@@ -1,6 +1,6 @@
-RSpec.describe ActiveJson do
+RSpec.describe ActiveJson::CLI do
 
-  subject(:active_json) { ActiveJson.select(json, where: filters, pluck: pluck) }
+  subject(:active_json) { ActiveJson::CLI.select(json, where: filters, pluck: pluck) }
 
   let(:file)    { 'spec/data/prices.json' }
   let(:json)    { IO.read(file) }

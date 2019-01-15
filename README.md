@@ -4,7 +4,7 @@ Format, query, and pluck data from JSON response files from the command line.
 
 ## Installation
 
-    $ gem install active_json
+    $ gem install active_json_cli
 
 ## Usage
 
@@ -21,7 +21,7 @@ Format, query, and pluck data from JSON response files from the command line.
 ```
 
 ##### Command breakdown
-  $ `gem command` + `json_path` + `query command(s)`
+  $ `gem command` + `json_path` + `query filter(s)`
 
 #### Filtering:
 

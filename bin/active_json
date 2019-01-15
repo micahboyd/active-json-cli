@@ -2,7 +2,7 @@
 
 $LOAD_PATH.unshift File.join(__FILE__, '..', '..', 'lib')
 
-require 'active_json'
+require 'cli'
 require 'json'
 
 json_path, *args = ARGV
@@ -12,7 +12,7 @@ json = IO.read(json_path)
 filters, attribute =
   %w[where: pluck:].map { |v| i = args.index(v); args[i+1] if i }
 
-query_result = ActiveJson.select(json, where: filters, pluck: attribute)
+query_result = ActiveJson::CLI.select(json, where: filters, pluck: attribute)
 pretty_result = JSON.pretty_generate(query_result)
 
 STDOUT.write(pretty_result)

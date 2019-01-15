@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_json (0.1.0)
+    active_json_cli (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -35,7 +35,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_json!
+  active_json_cli!
   bundler (~> 1.17)
   pry
   pry-doc
@@ -43,4 +43,4 @@ DEPENDENCIES
   rspec (~> 3.2)
 
 BUNDLED WITH
-   1.17.2
+   1.17.3

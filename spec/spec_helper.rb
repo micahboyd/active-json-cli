@@ -1,5 +1,5 @@
-require "bundler/setup"
-require "active_json"
+require 'bundler/setup'
+require 'cli'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
