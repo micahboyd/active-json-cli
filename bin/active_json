@@ -7,6 +7,9 @@ require 'json'
 
 json_path, *args = ARGV
 
+abort('Please provide a filepath') if json_path.nil? || json_path.empty?
+abort('File provided is not JSON') unless json_path.end_with?('.json')
+
 json = IO.read(json_path)
 
 filters, attribute =

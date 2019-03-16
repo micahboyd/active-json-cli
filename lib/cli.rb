@@ -5,14 +5,18 @@ module ActiveJson
   module CLI
     class << self
 
-      def select(json, where:, pluck: nil)
+      def select(json, where: nil, pluck: nil)
         data = parse_json(json)
+        return data unless where || pluck
+
         filter, pluck = build_query(where, pluck)
         Query.select(data, where: filter, pluck: pluck)
       end
 
-      def reject(json, where:, pluck: nil)
+      def reject(json, where: nil, pluck: nil)
         data = parse_json(json)
+        return data unless where || pluck
+
         filter, pluck = build_query(where, pluck)
         Query.reject(data, where: filter, pluck: pluck)
       end

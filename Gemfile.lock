@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_json_cli (0.1.0)
+    active_json_cli (0.1.2)
 
 GEM
   remote: https://rubygems.org/
