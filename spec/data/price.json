@@ -1,0 +1,8 @@
+{
+  "drink_name": "latte",
+  "prices": {
+    "small": 3.5,
+    "medium": 4.0,
+    "large": 4.5
+  }
+}

@@ -104,4 +104,32 @@ RSpec.describe ActiveJson::CLI do
 
   end
 
+  describe 'query non collections' do
+    let(:file) { 'spec/data/price.json' }
+
+    context 'with no filters' do
+      let(:filters) { nil }
+      let(:full_data) { JSON.parse(json, symbolize_names: true) }
+      it { expect(active_json).to eq full_data }
+    end
+
+    context 'selecting with "where" filter' do
+      it do
+        expect(active_json).to eq(
+          [
+            { drink_name: 'latte',
+              prices: { small: 3.5, medium: 4.0, large: 4.5 } }
+          ]
+        )
+      end
+    end
+
+    context 'selecting attribute with "pluck"' do
+      let(:pluck) { 'drink_name' }
+      it { expect(active_json).to eq ['latte'] }
+    end
+
+
+  end
+
 end
