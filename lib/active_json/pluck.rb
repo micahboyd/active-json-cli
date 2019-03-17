@@ -15,6 +15,7 @@ module ActiveJson
 
     def split_nested(pluck)
       return unless pluck
+
       pluck.split('.').map(&:to_sym)
     end
 

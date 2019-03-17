@@ -5,12 +5,12 @@ module ActiveJson
     extend self
 
     def select(data, where:, pluck: nil)
-      result = data.select(&apply_filters(where))
+      result = Array(data).select(&apply_filters(where))
       pluck ? result.map(&pluck_attributes(pluck)).compact : result
     end
 
     def reject(data, where:, pluck: nil)
-      result = data.reject(&apply_filters(where))
+      result = Array(data).reject(&apply_filters(where))
       pluck ? result.map(&pluck_attributes(pluck)).compact : result
     end
 

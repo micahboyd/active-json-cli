@@ -9,7 +9,7 @@ RSpec.describe ActiveJson::Query do
 
   Filter = Struct.new(:attrs) { def call(d); d.send(*attrs); end }
 
-  let(:data)    { (1..10) }
+  let(:data)    { (1..10).to_a }
   let(:filters) { [filter1, filter2] }
   let(:filter1) { Filter.new([:<, 9]) }
   let(:filter2) { Filter.new([:>, 5]) }
@@ -25,6 +25,11 @@ RSpec.describe ActiveJson::Query do
   context 'with no filters' do
     let(:filters) { [] }
     it { expect(select_result).to eq [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }
+  end
+
+  context 'when not a collection' do
+    let(:data) { 6 }
+    it { expect(select_result).to eq [6] }
   end
 
 end
